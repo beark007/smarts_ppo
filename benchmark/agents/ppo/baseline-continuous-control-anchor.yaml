@@ -1,0 +1,55 @@
+name: ppo-baseline
+
+agent:
+  state:
+    wrapper:
+      name: Simple
+    features:
+      distance_to_center: True
+      speed: True
+      steering: True
+      heading_errors: [20, continuous]
+      neighbor: 8
+      ego_pos: True
+  action:
+    type: 8  # 0: continuous, 1: discrete, 3: ContWithSpeed, 8: AnchorPoint
+
+interface:
+  max_episode_steps: 10000
+  neighborhood_vehicles:
+    radius: 50 #50
+  waypoints:
+    use_anchor: True
+    # number of points in trajectory planning
+    lookahead: 30 # larger than size of heading errors 20
+
+policy:
+  framework: rllib
+  trainer:
+    path: ray.rllib.agents.ppo
+    name: PPOTrainer
+
+run:
+  checkpoint_freq: 40
+  checkpoint_at_end: True
+  max_failures: 10000
+  resume: False
+  export_formats: [model, checkpoint]
+  stop:
+#    time_total_s: 1800
+#    time_total_s: 43200
+#    time_total_s: 5000
+#    time_total_s: 7200
+    time_total_s: 1800
+  config:
+    log_level: INFO
+    num_workers: 1
+    num_gpus: 0
+    horizon: 1000
+    clip_param: 0.2
+#    num_sgd_iter: 10
+    num_sgd_iter: 5
+    sgd_minibatch_size: 32
+    lr: 1e-3
+#    lr: 5e-4
+    lambda: 0

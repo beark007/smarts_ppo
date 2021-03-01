@@ -1,0 +1,79 @@
+Script started on 2021年02月07日 星期日 14时01分01秒
+]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ pythonbash docker/scripts/autocar/dev_into.sh [1@start[C[C[C[Ccd autocar/[K[3Pdu -sh *[5Pcd du -sh *cd autocar/bash docker/scripts/autocar/dev_start.sh [1Pinto[C[C[C[Cpython[K[Kpython^C
+]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ source .venv/bin/activate
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ python -m http.server -d docs/_build/html
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET / HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/css/theme.css HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/jquery.js HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/pygments.css HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/graphviz.css HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/documentation_options.js HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/doctools.js HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/js/theme.js HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/underscore.js HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_images/smarts_envision.gif HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /quickstart.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/css/fonts/lato-bold.woff2?cccb897485813c7c256901dbca54ecf2 HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/css/fonts/Roboto-Slab-Bold.woff2?9984f4a9bda09be08e83f2506954adbe HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/css/fonts/fontawesome-webfont.woff2?af7ae505a9eed503f8b8e6982036873e HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/css/fonts/lato-normal.woff2?bd03a2cc277bbbc338d464e679fe9942 HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/css/fonts/lato-normal-italic.woff2?4eb103b4d12be57cb1d040ed5e162e9d HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /_static/css/fonts/Roboto-Slab-Regular.woff2?7abf5b8d04d26a2cafea937019bca958 HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:03] code 404, message File not found
+127.0.0.1 - - [07/Feb/2021 15:11:03] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [07/Feb/2021 15:11:07] "GET /search.html?q=eager&check_keywords=yes&area=default HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 15:11:07] "GET /_static/searchtools.js HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:07] "GET /_static/language_data.js HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:07] "GET /searchindex.js HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:07] "GET /sim/rllib_in_smarts.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 15:11:11] "GET /sim/rllib_in_smarts.html?highlight=eager HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 15:11:11] "GET /sim/visualization.html HTTP/1.1" 200 -
+^C
+Keyboard interrupt received, exiting.
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ ^C
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ 
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ python -m http.server -d docs/_build/html
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+127.0.0.1 - - [07/Feb/2021 17:46:02] "GET /search.html?q=reward_adapter+&check_keywords=yes&area=default HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:02] "GET /ap -
+127.0.0.1 - - [07/Feb/2021 15:11:07] "GET /searchindex.js HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 15:11:07] "GET /sim/rllib_in_smarts.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 15:11:11] "GET /sim/rllib_in_smarts.html?highlight=eager HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 15:11:11] "GET /sim/visualization.html HTTP/1.1" 200 -
+^C
+Keyboard interrupt received, exiting.
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ ^C
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ 
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ python -m http.server -d docs/_build/html
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+127.0.0.1 - - [07/Feb/2021 17:46:02] "GET /search.html?q=reward_adapter+&check_keywords=yes&area=default HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:02] "GET /api/smarts.contrib.pymarl.adapters.reward_adapter.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:02] "GET /api/examples.rllib_agent.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:02] "GET /sim/agent.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 17:46:02] "GET /api/smarts.contrib.pymarl.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:02] "GET /api/smarts.contrib.pymarl.adapters.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:02] "GET /api/smarts.core.agent.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:07] "GET /api/smarts.contrib.pymarl.adapters.reward_adapter.html?highlight=reward_adapter HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:07] "GET /api/smarts.contrib.pymarl.adapters.state_adapter.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:07] "GET /_static/css/fonts/lato-bold-italic.woff2?0b6bb6725576b072c5d0b02ecdd1900d HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 17:46:14] "GET /api/smarts.core.agent.html?highlight=reward_adapter HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:14] "GET /api/smarts.core.agent_interface.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 17:46:31] "GET /sim/agent.html?highlight=reward_adapter HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:46:31] "GET /sim/env.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 17:46:31] "GET /_images/env.png HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 17:48:22] "GET /sim/observations.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Feb/2021 17:48:22] "GET /_images/rgb.png HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:48:22] "GET /sim/scenario_studio.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:51:34] "GET /search.html?q=reward_adapter&check_keywords=yes&area=default HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:51:46] "GET /api/smarts.contrib.pymarl.adapters.html?highlight=reward_adapter HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2021 17:51:46] "GET /api/smarts.contrib.pymarl.adapters.action_adapter.html HTTP/1.1" 200 -
+^C
+Keyboard interrupt received, exiting.
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ python -m http.server -d docs/_build/html[16Psource .venv/bin/activatepython[Kbash docker/scripts/autocar/dev_into.sh [1@start[C[C[C[C[1Pinto[C[C[C[Cpython[Ksource .venv/bin/activate^C
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ exit
+exit
+Script done, file is typescript
+(.venv) ]0;user@user-System-Product-Name: ~/SMARTS-master[01;32muser@user-System-Product-Name[00m:[01;34m~/SMARTS-master[00m$ exit
+
+Script done on 2021年02月07日 星期日 20时42分22秒
