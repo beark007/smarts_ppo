@@ -39,17 +39,19 @@ run:
 #    time_total_s: 1800
 #    time_total_s: 43200
 #    time_total_s: 5000
-#    time_total_s: 7200
     time_total_s: 1800
+#    time_total_s: 5
   config:
+    observation_filter: "MeanStdFilter"
     log_level: INFO
-    num_workers: 1
+    num_workers: 4
     num_gpus: 0
     horizon: 1000
     clip_param: 0.2
-#    num_sgd_iter: 10
-    num_sgd_iter: 5
-    sgd_minibatch_size: 32
-    lr: 1e-3
-#    lr: 5e-4
+    num_sgd_iter: 20
+#    num_sgd_iter: 5
+    sgd_minibatch_size: 64
+#    sgd_minibatch_size: 16
+#    lr: 2.5e-3
+    lr: 5e-4
     lambda: 0

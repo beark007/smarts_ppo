@@ -75,8 +75,9 @@ class Simple(Wrapper):
         # dis: [x, y, heading(arc)]
         dis = (anchor_point - cur_position)[0]
 
-        new_dones = {}
-        if dis[0] < 0:
+        new_dones = dones
+        buffer = -50
+        if dis[0] < buffer:
             print(f"End episode in advance, ego_position {cur_position}; anchor point {anchor_point}")
             new_dones = {
                     # key: True

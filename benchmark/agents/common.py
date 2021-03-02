@@ -1103,6 +1103,8 @@ def get_reward_adapter(observation_adapter, adapter_type="vanilla"):
         # reward += effic_dist0
         # first-order info
         effic_dist1 = 0.1 * (last_goal_dist - goal_dist)
+        if last_goal_dist < goal_dist:
+            reward += -50
         # effic_dist1 = 1.0 * (last_goal_dist - goal_dist)
         reward += effic_dist1
         # print(f"efficiency: dist0[deprecated] {effic_dist0}; dist1 {effic_dist1}")
