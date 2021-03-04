@@ -76,7 +76,8 @@ class Simple(Wrapper):
         dis = (anchor_point - cur_position)[0]
 
         new_dones = dones
-        buffer = -50
+        buffer = 0
+        # buffer = -10
         if dis[0] < buffer:
             print(f"End episode in advance, ego_position {cur_position}; anchor point {anchor_point}")
             new_dones = {

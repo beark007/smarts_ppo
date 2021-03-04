@@ -318,7 +318,8 @@ class Waypoints:
         print(f"in waypoints.py, point {point}; closest {closest_wp2point.pos}; anchor {anchor_point}; closest {closest_wp2anchor.pos}")
 
         # 3, generate waypoint path
-        waypoint_paths = self._waypoints_starting_at_waypoint_nums\
+        waypoint_paths = []
+        waypoint_paths += self._waypoints_starting_at_waypoint_nums\
             (point, closest_wp2point, anchor_point, closest_wp2anchor, lookaheadnum)
 
         return waypoint_paths

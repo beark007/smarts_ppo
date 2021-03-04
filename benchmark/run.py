@@ -83,7 +83,8 @@ def main(
 
     config["env_config"].update(
         {
-            "seed": 42,
+            # "seed": 42,
+            "seed": 45,
             "scenarios": [str(scenario_path)],
             "headless": headless,
             "agent_specs": agents,
@@ -175,7 +176,7 @@ def parse_args():
     )
     parser.add_argument("--config_file", "-f", type=str, required=True)
     parser.add_argument("--restore_path", type=str, default=None)
-    parser.add_argument("--num_workers", type=int, default=4, help="RLlib num workers")
+    parser.add_argument("--num_workers", type=int, default=8, help="RLlib num workers")
     parser.add_argument("--cluster", action="store_true")
     parser.add_argument("--horizon", type=int, default=1000, help="Horizon for a episode")
     parser.add_argument("--mode", type=str, default="train", help="train or evaluate")

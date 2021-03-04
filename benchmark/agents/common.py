@@ -218,7 +218,7 @@ class CalObs:
         """ Calculate the signed distance to the center of the current lane. """
 
         ego = env_obs.ego_vehicle_state
-        waypoint_paths = env_obs.waypoint_paths
+        waypoint_paths = env_obs.waypoint_paths[:3]
         wps = [path[0] for path in waypoint_paths]
         closest_wp = min(wps, key=lambda wp: wp.dist_to(ego.position))
         signed_dist_to_center = closest_wp.signed_lateral_error(ego.position)
@@ -242,11 +242,11 @@ class CalObs:
         # print(f"closest_path is {closest_path}")
         # closest_path_len = len(closest_path)
 
-        waypoint_path = env_obs.waypoint_paths
-        closest_path = waypoint_path[0]
-        # print(f"in heading, closest_wp is {closest_path}")
+        # env_obs.waypoint_paths: (3+1)x waypoint_path
+        waypoint_paths = env_obs.waypoint_paths
+        closest_path = waypoint_paths[-1]
         closest_path_len = len(closest_path)
-        print(f"in cal heading, len {closest_path_len}; anchor {closest_path[-1].pos}")
+
         if look_type == "continuous":
             wp_indices = np.arange(look_ahead)
         else:
@@ -265,7 +265,7 @@ class CalObs:
             math.sin(math.radians(wp.relative_heading(ego.heading)))
             for wp in closest_path_wps
         ]
-        # print(heading_errors)
+        print(f"in cal heading, anchor {closest_path[-1].pos}, point used4heading {closest_path_wps[-1].pos}")
         return np.asarray(heading_errors)
 
     @staticmethod
@@ -295,8 +295,19 @@ class CalObs:
         # print("in cal_neighbor")
         ego = env_obs.ego_vehicle_state
         neighbor_vehicle_states = env_obs.neighborhood_vehicle_states
-        # dist, speed, ttc, pos
+        # dist, speed, ttc, rel_pos_x, rel_pos_y
+        # Default value
+        # dist:  80
+        # speed: 50
+        # ttc:   10
+        # rel_pos_x: 80
+        # rel_pos_y: 80
         features = np.zeros((closest_neighbor_num, 5))
+        for direction_id in range(len(features)):
+            features[direction_id, :] = np.asarray(
+                [80, 50, 10, 80, 80]
+            )
+
         # fill neighbor vehicles into closest_neighboor_num areas
         surrounding_vehicles = _get_closest_vehicles(
             ego, neighbor_vehicle_states, n=closest_neighbor_num
@@ -351,7 +362,7 @@ class CalObs:
         also the relative speed of the front vehicle which positioned at the same lane.
         """
         ego = env_obs.ego_vehicle_state
-        waypoint_paths = env_obs.waypoint_paths
+        waypoint_paths = env_obs.waypoint_paths[:3]
         wps = [path[0] for path in waypoint_paths]
         closest_wp = min(wps, key=lambda wp: wp.dist_to(ego.position))
 
@@ -453,7 +464,7 @@ class CalObs:
         # default 100m
         closest_its_nv_rel_pos = np.array([1, 1])
 
-        wp_paths = env_obs.waypoint_paths
+        wp_paths = env_obs.waypoint_paths[:3]
         ego = env_obs.ego_vehicle_state
         neighborhood_vehicle_states = env_obs.neighborhood_vehicle_states
         closest_wps = [path[0] for path in wp_paths]
@@ -841,7 +852,7 @@ class SimpleCallbacks(DefaultCallbacks):
     ):
         print("episode {} on_episode_step".format(episode.episode_id))
         ego_speed = episode.user_data["ego_speed"]
-        print(f"action-1 is {episode._agent_to_last_action};action-2 is {episode._agent_to_prev_action}")
+        print(f"action_last is {episode._agent_to_last_action};action_prev is {episode._agent_to_prev_action}")
 
         # print(f"user_data is {episode.user_data}")
         for _id, obs in episode._agent_to_last_raw_obs.items():
@@ -969,6 +980,7 @@ def cal_obs(env_obs: Observation, space, feature_configs):
     obs = None
     if isinstance(space, gym.spaces.Dict):
         obs = dict()
+        # print(f"in common, spaces,{space.spaces}")
         for name in space.spaces:
             # print(f"in cal_obs, cal_{name},{feature_configs[name]}")
             if hasattr(CalObs, f"cal_{name}"):
@@ -1032,11 +1044,11 @@ def get_reward_adapter(observation_adapter, adapter_type="vanilla"):
         reward, bonus = 0.0, 0.0
 
         # ================== Energy ==================
-        waypoint_path = env_obs.waypoint_paths
-        cur_closest_path = waypoint_path[0] # ego_waypoint
+        waypoint_path = env_obs.waypoint_paths[-1]
+        cur_closest_path = waypoint_path # ego_waypoint
         cur_heading = cur_closest_path[0].heading
-        last_waypoint_path = last_env_obs.waypoint_paths
-        last_closest_path = last_waypoint_path[0]  # ego_waypoint
+        last_waypoint_path = last_env_obs.waypoint_paths[-1]
+        last_closest_path = last_waypoint_path  # ego_waypoint
         last_heading = last_closest_path[0].heading
 
         comfort_heading = - 0.1 * np.abs(cur_heading-last_heading)
@@ -1104,7 +1116,8 @@ def get_reward_adapter(observation_adapter, adapter_type="vanilla"):
         # first-order info
         effic_dist1 = 0.1 * (last_goal_dist - goal_dist)
         if last_goal_dist < goal_dist:
-            reward += -50
+            print("in reverse situation")
+            reward += -200
         # effic_dist1 = 1.0 * (last_goal_dist - goal_dist)
         reward += effic_dist1
         # print(f"efficiency: dist0[deprecated] {effic_dist0}; dist1 {effic_dist1}")
@@ -1162,7 +1175,7 @@ def get_reward_adapter(observation_adapter, adapter_type="vanilla"):
         reward += comfort_steering
         # print(f"comfort: steering {comfort_steering}")
 
-        # print(f"current bonus is {bonus}")
+        print(f"current bonus + reward is {bonus + reward}")
         return bonus + reward
 
     def stack_frame(last_env_obs, env_obs, env_reward):
@@ -1308,7 +1321,7 @@ def get_reward_adapter(observation_adapter, adapter_type="vanilla"):
 
 def get_distance_from_center(env_obs):
     ego_state = env_obs.ego_vehicle_state
-    wp_paths = env_obs.waypoint_paths
+    wp_paths = env_obs.waypoint_paths[:3]
     closest_wps = [path[0] for path in wp_paths]
 
     # distance of vehicle from center of lane

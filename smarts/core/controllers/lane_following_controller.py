@@ -346,8 +346,8 @@ class LaneFollowingController:
         # may affect stability of the controller.
         print(f"start wp_paths anchor controller")
         wp_path = sensor_state.mission_planner.waypoint_paths_at_nums(
-            sim, vehicle.pose, lookaheadnum, anchor_point)
-        assert len(wp_path)==lookaheadnum, "path length is not valid"
+            sim, vehicle.pose, lookaheadnum, anchor_point)[-1]
+        assert len(wp_path) == lookaheadnum, "path length is not valid"
         # print(f"in l_f_c anchor, wps {wp_path}")
 
         # We compute a road "curviness" to inform our throttle activation.

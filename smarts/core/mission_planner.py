@@ -61,7 +61,7 @@ class MissionPlanner:
         self._cut_in_speed = None
         self._uturn_is_initialized = False
         # For decision making: anchor point
-        self.waypoints_anchor = None
+        # self.waypoints_anchor = None
         self.generated_anchor = None
 
     def random_endless_mission(
@@ -181,11 +181,15 @@ class MissionPlanner:
         # print(f"in waypoint, generated_anchor {self.generated_anchor}")
         # print(f"in mission, edge is {edge_ids}; lookahead {lookahead}")
         if edge_ids:
-            self.waypoints_anchor = self._waypoints.waypoint_paths_along_route_nums(
-                pose.position, anchor_point, lookaheadnum, edge_ids
+            # waypoints: 4(3+1) x waypoint_path
+            waypoint_path_all = self._waypoints.waypoint_paths_along_route(
+                pose.position, lookaheadnum, edge_ids
             )
-            # print(f"in anchor, {self.waypoints_anchor}")
-            return self.waypoints_anchor
+            waypoint_path_all += [self._waypoints.waypoint_paths_along_route_nums(
+                pose.position, anchor_point, lookaheadnum, edge_ids
+            )]
+
+            return waypoint_path_all
 
     def waypoint_paths_on_lane_at(self, pose: Pose, lane_id: str, lookahead: float):
         """Call assumes you're on the correct route already. We do not presently

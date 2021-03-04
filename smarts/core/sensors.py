@@ -994,18 +994,19 @@ class WaypointsSensor(Sensor):
         @lru_cache(1)
         def lazy_calculate_waypoints():
             if self._use_anchor:
-                # print(f"generated anchor {self._mission_planner.generated_anchor}")
+                # print(f"in lazy, generated anchor {self._mission_planner.generated_anchor}")
                 if self._mission_planner.generated_anchor is None:
                     # For initialization to get observation
                     self._anchor_point = np.asarray([99.5, 0.0, -1.57])
                 else:
                     self._anchor_point = self._mission_planner.generated_anchor
 
-                waypoints_anchor = [
-                    self._mission_planner.waypoint_paths_at_nums(sim=self._sim, pose=self._vehicle.pose,
+                # (3+1) waypoint_path
+                # decide Observation.waypoint_paths
+                waypoints_by_anchor = self._mission_planner.waypoint_paths_at_nums(sim=self._sim, pose=self._vehicle.pose,
                                 lookaheadnum=self._lookahead, anchor_point=self._anchor_point)
-                ]
-                return waypoints_anchor
+
+                return waypoints_by_anchor
 
             return self._mission_planner.waypoint_paths_at(
                 sim=self._sim, pose=self._vehicle.pose, lookahead=self._lookahead,
