@@ -62,7 +62,7 @@ class Controllers:
         action_space,
         vehicle_type,
     ):
-        print("in controller")
+        # print("in controller")
         if action is None:
             return
         if vehicle_type == "bus":

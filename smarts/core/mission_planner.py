@@ -61,7 +61,6 @@ class MissionPlanner:
         self._cut_in_speed = None
         self._uturn_is_initialized = False
         # For decision making: anchor point
-        # self.waypoints_anchor = None
         self.generated_anchor = None
 
     def random_endless_mission(

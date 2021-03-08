@@ -216,9 +216,11 @@ class SMARTS(ShowBase):
         # print("fetch agent actions123")
         all_agent_actions = self._agent_manager.fetch_agent_actions(self, agent_actions)
         # print(f"action123: {all_agent_actions}; {dt}; {self._elapsed_sim_time} ")
+
         # 2. Step all providers and harmonize state
         provider_state = self._step_providers(all_agent_actions, dt)
         self._check_if_acting_on_active_agents(agent_actions)
+
         # 3. Step bubble manager and trap manager
         self._vehicle_index.sync()
         self._bubble_manager.step(self)

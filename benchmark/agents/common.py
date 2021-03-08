@@ -163,9 +163,14 @@ class ActionSpace:
                 high=np.array([TARGET_SPEED/METER_PER_SECOND_TO_KM_PER_HR, 3.0]),
                 dtype=np.float32)
         elif space_type == ActionSpaceType.AnchorPoint:
+            # return gym.spaces.Box(
+            #     low=np.array([0.0, -4.8, -1.57]),
+            #     high=np.array([200.0, 4.8, 1.57]),
+            #     dtype=np.float32,
+            # )
             return gym.spaces.Box(
-                low=np.array([0.0, -4.8, -1.57]),
-                high=np.array([200.0, 4.8, 1.57]),
+                low=np.array([-1.0, -1.0, -1.0]),
+                high=np.array([1.0, 1.0, 1.0]),
                 dtype=np.float32,
             )
         else:
@@ -1058,9 +1063,11 @@ def get_reward_adapter(observation_adapter, adapter_type="vanilla"):
         # ================== Safety ==================
         ego_events = env_obs.events
         # ------ collision ------
-        reward += -50.0 if len(ego_events.collisions) > 0 else 0.0
+        reward += -200.0 if len(ego_events.collisions) > 0 else 0.0
+        # reward += -50.0 if len(ego_events.collisions) > 0 else 0.0
         # ------ off road ------
-        reward += -50.0 if ego_events.off_road else 0.0
+        reward += -200.0 if ego_events.off_road else 0.0
+        # reward += -50.0 if ego_events.off_road else 0.0
         # ------ close to neighbor ------
         obs = observation_adapter(env_obs)
         last_obs = observation_adapter(last_env_obs)
