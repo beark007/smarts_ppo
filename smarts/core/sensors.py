@@ -997,35 +997,36 @@ class WaypointsSensor(Sensor):
                 # print(f"in lazy, generated anchor {self._mission_planner.generated_anchor}")
                 if self._mission_planner.generated_anchor is None:
                     # For initialization to get observation
-                    self._anchor_point = np.asarray([99.5, 0.0, -1.57])
+                    # self._anchor_point = np.asarray([200.0, 0.0])
+                    self._anchor_point = [200.0, 0.0]
                 else:
                     self._anchor_point = self._mission_planner.generated_anchor
 
                 # (3+1) waypoint_path
                 # decide Observation.waypoint_paths
 
-                cur_pos = self._vehicle.pose.position  # [x,y,z]
-                cur_goal = self._mission_planner._mission.goal.position  # [x,y]
-
-                cur_position_xy = cur_pos[:2]
-                cur_position_x = cur_position_xy[0]
-
-                cur_goal_xy = list(cur_goal)
-                cur_goal_x = cur_goal[0]
-
-                buffer = 0.1
-                # new_goal_xy = [cur_goal_x+cur_position_x+buffer, cur_goal_xy[1]]
-                new_goal_xy = [cur_goal_x, cur_goal_xy[1]]
-                new_goal_x = new_goal_xy[0]
-
-                mid_pos_x = (cur_position_x + new_goal_x) / 2
-                anchor_x = mid_pos_x + self._anchor_point[0]
-                anchor_point = [anchor_x] + list(self._anchor_point)[1:]
-                print(self._anchor_point[1:])
-                print(f"in lazy, cur_pos {cur_pos};goal {new_goal_xy}; anchor_point {anchor_point}")
+                # cur_pos = self._vehicle.pose.position  # [x,y,z]
+                # cur_goal = self._mission_planner._mission.goal.position  # [x,y]
+                #
+                # cur_position_xy = cur_pos[:2]
+                # cur_position_x = cur_position_xy[0]
+                #
+                # cur_goal_xy = list(cur_goal)
+                # cur_goal_x = cur_goal[0]
+                #
+                # buffer = 0.1
+                # # new_goal_xy = [cur_goal_x+cur_position_x+buffer, cur_goal_xy[1]]
+                # new_goal_xy = [cur_goal_x, cur_goal_xy[1]]
+                # new_goal_x = new_goal_xy[0]
+                #
+                # mid_pos_x = (cur_position_x + new_goal_x) / 2
+                # anchor_x = mid_pos_x + self._anchor_point[0]
+                # anchor_point = [anchor_x] + list(self._anchor_point)[1:]
+                # print(self._anchor_point[1:])
+                # print(f"in lazy, cur_pos {cur_pos};goal {new_goal_xy}; anchor_point {anchor_point}")
 
                 waypoints_by_anchor = self._mission_planner.waypoint_paths_at_nums(sim=self._sim, pose=self._vehicle.pose,
-                                lookaheadnum=self._lookahead, anchor_point=anchor_point)
+                                lookaheadnum=self._lookahead, anchor_point=self._anchor_point)
 
                 return waypoints_by_anchor
 

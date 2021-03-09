@@ -153,7 +153,7 @@ class MissionPlanner:
         """Call assumes you're on the correct route already. We do not presently
         "replan" in case the route has changed.
         """
-        print("in normal")
+        # print("in normal")
         assert (
             self._did_plan
         ), "Must call plan(...) before being able to invoke the mission planner."
@@ -172,11 +172,15 @@ class MissionPlanner:
     def waypoint_paths_at_nums(self, sim, pose: Pose,
                                lookaheadnum: int, anchor_point):
         # lookahead： nums of trajectory points
+        # anchor_point: [x,y]
         assert (
             self._did_plan
         ), "Must call plan(...) before being able to invoke the mission planner."
         edge_ids = self._edge_ids(pose)
         self.generated_anchor = anchor_point
+        # print(f"in m_p, anchor_point b {anchor_point}")
+        anchor_point = list(anchor_point) + [-1.57]  # [x,y,heading]
+        # print(f"in m_p, anchor_point aft {anchor_point}")
         # print(f"in waypoint, generated_anchor {self.generated_anchor}")
         # print(f"in mission, edge is {edge_ids}; lookahead {lookahead}")
         if edge_ids:

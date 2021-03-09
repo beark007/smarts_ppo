@@ -97,8 +97,8 @@ class Simple(Wrapper):
 
     def step(self, agent_actions):
         # print(f"in step, simple class")
-        # rescale action with [100, 4.8, 1.57]
-        coefficient = [100, 4.8, 1.57]
+        # rescale action with [100, 4.8]
+        coefficient = [200, 4.8]
         rescale_action = {
                     key: val * coefficient
                     for key, val in agent_actions.items()
@@ -109,6 +109,7 @@ class Simple(Wrapper):
         # Target position behind the current position. x < x_{ego}
         # ego_pos = observations.ego_vehicle_state.position
         # rescale_action
+        # threshold: decrease with mid_pos
         # mid_pos = (ego_pos + goal)/2
         #
         # *************************************************************************
@@ -146,10 +147,9 @@ class Simple(Wrapper):
         # assert
 
         new_dones = dones
-        # TODO:
-        #  consider buffer = -10
+        buffer = mid_pos_x
         # or mid_pos_x + anchor_point_x > goal_x
-        if mid_pos_x + anchor_point_x < cur_position_x:
+        if anchor_point_x + buffer < cur_position_x:
             print(f"End episode in advance, ego_position {cur_position_xy}; anchor point {mid_pos + anchor_point_xy}")
             new_dones = {
                     # key: True

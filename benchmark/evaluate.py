@@ -220,6 +220,7 @@ def rollout(trainer, env_name, num_steps, num_episodes=0):
             action = action_dict
 
             action = action if multiagent else action[_DUMMY_AGENT_ID]
+            print("in step, evaluate")
             next_obs, reward, done, info = env.step(action)
 
             metrics_obj.log_step(multi_obs, reward, done, info, episode=episode)

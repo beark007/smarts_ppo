@@ -17,7 +17,9 @@ AGENT_ID = "Agent-007"
 class TrackingAgent(Agent):
     def act(self, obs):
         lane_index = 0
-        num_trajectory_points = min([10, len(obs.waypoint_paths[lane_index])])
+        num_trajectory_points = min([1, len(obs.waypoint_paths[lane_index])])
+        print(f"obs.waypoint_paths {obs.waypoint_paths[0]}")
+        print(f"num_trajectory_points {num_trajectory_points}")
         # Desired speed is in m/s
         desired_speed = 50 / 3.6
         trajectory = [

@@ -169,8 +169,8 @@ class ActionSpace:
             #     dtype=np.float32,
             # )
             return gym.spaces.Box(
-                low=np.array([-1.0, -1.0, -1.0]),
-                high=np.array([1.0, 1.0, 1.0]),
+                low=np.array([-1.0, -1.0]),
+                high=np.array([1.0, 1.0]),
                 dtype=np.float32,
             )
         else:
@@ -256,14 +256,18 @@ class CalObs:
             wp_indices = np.arange(look_ahead)
         else:
             wp_indices = np.array([0, 1, 2, 3, 5, 8, 13, 21, 34, 50])[:look_ahead]
-
+        # print(f"in cal heading0, {wp_indices}")
+        # print(f"in cal heading0, {closest_path_len}")
         # first_larger_value = np.argmax(wp_indices > closest_path_len - 1)
         first_larger_value = np.argmax(wp_indices > closest_path_len)
         if first_larger_value == 0:
             pass
         else:
             wp_indices[first_larger_value:] = wp_indices[first_larger_value - 1]
-
+        # print(f"in cal heading1, {closest_path}")
+        # print(f"in cal heading2, {len(closest_path)}")
+        # print(f"in cal heading3, {wp_indices}")
+        # print(f"in cal heading4, {len(wp_indices)}")
         closest_path_wps = [closest_path[i] for i in wp_indices]
 
         heading_errors = [
@@ -965,7 +969,7 @@ class ActionAdapter:
     @staticmethod
     def continuous_action_anchor_adapter(policy_action):
         # print("in fun of continuous_action_anchor_adapter")
-        assert len(policy_action) == 3
+        assert len(policy_action) == 2
         return policy_action
 
 def subscribe_features(**kwargs):

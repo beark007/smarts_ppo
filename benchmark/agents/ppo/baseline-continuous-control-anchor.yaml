@@ -30,7 +30,7 @@ policy:
     name: PPOTrainer
 
 run:
-  checkpoint_freq: 10
+  checkpoint_freq: 30
   checkpoint_at_end: True
   max_failures: 100000
   resume: False
@@ -39,9 +39,9 @@ run:
 #    time_total_s: 1800
 #    time_total_s: 43200
 #    time_total_s: 5000
-#    time_total_s: 72000
-#    time_total_s: 4800
-    time_total_s: 1800
+    time_total_s: 36000
+#    time_total_s: 5400
+#    time_total_s: 1800
 #    time_total_s: 10
   config:
     observation_filter: "MeanStdFilter"
@@ -63,6 +63,6 @@ run:
 #    train_batch_size: 1000
 
 #    lr: 1e-3
-#    lr: 5e-4
-    lr: 1e-4
+    lr: 5e-4
+#    lr: 1e-4
     lambda: 0

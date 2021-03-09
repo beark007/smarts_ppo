@@ -302,6 +302,7 @@ class Waypoints:
         #        closest_wp_on_each_route_edge: linked_wp
         #        TODO: consider the heading of anchor point to find the closest waypoint
         # anchor_point = [18, -1.9, 0.05]  # For test
+        # print(f"in 1633, anchor_point {anchor_point}")
         closest_wp_on_each_route_edge_2anchor = [
             self._closest_linked_wp_in_kd_tree_batched(
                 [anchor_point],
