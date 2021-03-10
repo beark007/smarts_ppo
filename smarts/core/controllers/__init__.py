@@ -101,14 +101,12 @@ class Controllers:
         elif action_space == ActionSpaceType.AnchorPoint:
             # TODO: check action (AnchorPoint) is valid
             # assert action is change_lane_set, "target lane is not valid"
-            target_speed = 15
             LaneFollowingController.perform_lane_following_with_anchor(
                 sim,
                 agent_id,
                 vehicle,
                 controller_state,
                 sensor_state,
-                target_speed,
                 action,
             )
         elif action_space == ActionSpaceType.Lane:

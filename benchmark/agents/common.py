@@ -163,14 +163,11 @@ class ActionSpace:
                 high=np.array([TARGET_SPEED/METER_PER_SECOND_TO_KM_PER_HR, 3.0]),
                 dtype=np.float32)
         elif space_type == ActionSpaceType.AnchorPoint:
-            # return gym.spaces.Box(
-            #     low=np.array([0.0, -4.8, -1.57]),
-            #     high=np.array([200.0, 4.8, 1.57]),
-            #     dtype=np.float32,
-            # )
+            # AnchorPoint: [x,y,vel]
+            # rescale in simple.py (step)
             return gym.spaces.Box(
-                low=np.array([-1.0, -1.0]),
-                high=np.array([1.0, 1.0]),
+                low=np.array([-1.0, -1.0, -1.0]),
+                high=np.array([1.0, 1.0, 1.0]),
                 dtype=np.float32,
             )
         else:

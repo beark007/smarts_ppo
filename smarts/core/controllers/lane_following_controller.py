@@ -336,18 +336,19 @@ class LaneFollowingController:
             vehicle,
             controller_state,
             sensor_state,
-            target_speed,
             anchor_point,
             lookaheadnum=30,
     ):
         assert isinstance(vehicle.chassis, AckermannChassis)
+        target_speed = anchor_point[-1]
+        anchor_point_XY = anchor_point[:2]
         state = controller_state
         # This lookahead value is coupled with a few calculations below, changing it
         # may affect stability of the controller.
         # anchor_point: [x,y]
         print(f"in l_f_c, lookaheadnum {lookaheadnum}")
         wp_path = sensor_state.mission_planner.waypoint_paths_at_nums(
-            sim, vehicle.pose, lookaheadnum, anchor_point)[-1]
+            sim, vehicle.pose, lookaheadnum, anchor_point_XY)[-1]
         assert len(wp_path) == lookaheadnum, "path length is not valid"
         # print(f"in l_f_c anchor, wps {wp_path}")
 

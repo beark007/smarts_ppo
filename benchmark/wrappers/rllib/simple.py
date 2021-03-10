@@ -98,7 +98,7 @@ class Simple(Wrapper):
     def step(self, agent_actions):
         # print(f"in step, simple class")
         # rescale action with [100, 4.8]
-        coefficient = [200, 4.8]
+        coefficient = [200, 4.8, 20]
         rescale_action = {
                     key: val * coefficient
                     for key, val in agent_actions.items()
