@@ -98,7 +98,7 @@ class Simple(Wrapper):
     def step(self, agent_actions):
         # print(f"in step, simple class")
         # rescale action with [100, 4.8]
-        coefficient = [200, 4.8, 20]
+        coefficient = [200, 4.8, 33.3]
         rescale_action = {
                     key: val * coefficient
                     for key, val in agent_actions.items()
@@ -112,16 +112,20 @@ class Simple(Wrapper):
         # threshold: decrease with mid_pos
         # mid_pos = (ego_pos + goal)/2
         #
-        # *************************************************************************
-        # ------------------------------------------------------------
-        # ego_pos                  mid_pos                        goal
-        # ------------------------------------------------------------
-        #      ->  rescale_action  <-
-        # *************************************************************************
+        # ********************************************************************************
+        # -------------------------------------------------------------------------
+        #                 ego_pos                  mid_pos                        goal
+        # -------------------------------------------------------------------------
+        #     ap
+        #       <-    dist     ->
+        # ********************************************************************************
+        # dist = ap - ego_pos
+        # buffer = mid_pos
+        # dist + buffer < 0 ---> reset current episode in advance
         # TODO:
         #   Current version supports handling only one agent
         #   Sets done  to True except for '__all__' in this situation
-        #   Extend the position of goal
+        #   Extend the position of goal --> doesn't work
         action = [
             action
             for _, action in rescale_action.items()

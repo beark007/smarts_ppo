@@ -966,7 +966,7 @@ class ActionAdapter:
     @staticmethod
     def continuous_action_anchor_adapter(policy_action):
         # print("in fun of continuous_action_anchor_adapter")
-        assert len(policy_action) == 2
+        assert len(policy_action) == 3
         return policy_action
 
 def subscribe_features(**kwargs):
