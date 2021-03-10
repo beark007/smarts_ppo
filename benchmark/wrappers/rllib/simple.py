@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 from benchmark.wrappers.rllib.wrapper import Wrapper
-
+import  math
 
 class Simple(Wrapper):
     def __init__(self, config):
@@ -98,11 +98,14 @@ class Simple(Wrapper):
     def step(self, agent_actions):
         # print(f"in step, simple class")
         # rescale action with [100, 4.8]
-        coefficient = [200, 4.8]
-        rescale_action = {
-                    key: val * coefficient
-                    for key, val in agent_actions.items()
-                }
+        # ----- work
+        # coefficient = [200, 4.8]
+        # rescale_action = {
+        #             key: [math.exp(val[0]), coefficient[1] * val[1]]
+        #             for key, val in agent_actions.items()
+        #         }
+        # -----
+        rescale_action = agent_actions
         print(f"in step, simple class, before action {agent_actions}; rescale_action {rescale_action}")
         observations, rewards, dones, infos = self.env.step(rescale_action)
         # End the episode if agent_actions not valid.

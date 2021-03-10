@@ -168,9 +168,22 @@ class ActionSpace:
             #     high=np.array([200.0, 4.8, 1.57]),
             #     dtype=np.float32,
             # )
+
+            # --- work
+            # return gym.spaces.Box(
+            #     low=np.array([-1.0, -1.0]),
+            #     high=np.array([1.0, 1.0]),
+            #     dtype=np.float32,
+            # )
+            # ---
+            # return gym.spaces.Box(
+            #     low=np.array([-10.0, -1.0]),
+            #     high=np.array([5.3, 1.0]),
+            #     dtype=np.float32,
+            # )
             return gym.spaces.Box(
-                low=np.array([-1.0, -1.0]),
-                high=np.array([1.0, 1.0]),
+                low=np.array([0.0, -4.8]),
+                high=np.array([200.0, 4.8]),
                 dtype=np.float32,
             )
         else:
