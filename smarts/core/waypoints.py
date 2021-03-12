@@ -278,52 +278,52 @@ class Waypoints:
         # print(f"sorted_wps0 is {sorted_wps[0]}")
         return sorted_wps
 
-    def waypoint_paths_along_route_nums(self, point, anchor_point, lookaheadnum, route):
-        assert len(route) > 0, f"Expected at least 1 edge in the route, got: {route}"
-        # print("nums, in waypoint_paths_along_route")
-        # 1, find the closest waypoint to current point of ego vehicle
-        #        closest_wp_on_each_route_edge: linked_wp
-        #        TODO: consider the heading of anchor point to find the closest waypoint
-        closest_wp_on_each_route_edge_2point = [
-            self._closest_linked_wp_in_kd_tree_batched(
-                [point],
-                self._waypoints_by_edge_id[edge],
-                self._waypoints_kd_tree_by_edge_id[edge],
-            )[0][0]
-            for edge in route
-        ]
-        closest_linked_wp_2point = min(
-            closest_wp_on_each_route_edge_2point, key=lambda l_wp: l_wp.wp.dist_to(point)
-        )
-        closest_wp2point = closest_linked_wp_2point[0]
-        # print(f"nums, closest wp {closest_wp2point[0].pos}")
-
-        # 2, find the closest waypoint to anchor point
-        #        closest_wp_on_each_route_edge: linked_wp
-        #        TODO: consider the heading of anchor point to find the closest waypoint
-        # anchor_point = [18, -1.9, 0.05]  # For test
-        # print(f"in 1633, anchor_point {anchor_point}")
-        closest_wp_on_each_route_edge_2anchor = [
-            self._closest_linked_wp_in_kd_tree_batched(
-                [anchor_point],
-                self._waypoints_by_edge_id[edge],
-                self._waypoints_kd_tree_by_edge_id[edge],
-            )[0][0]
-            for edge in route
-        ]
-        closest_linked_wp2anchor = min(
-            closest_wp_on_each_route_edge_2anchor, key=lambda l_wp: l_wp.wp.dist_to(anchor_point)
-        )
-        closest_wp2anchor = closest_linked_wp2anchor[0]
-        # print(f"nums, closest wp {closest_wp2anchor[0].pos}")
-        print(f"in waypoints.py, point {point}; closest {closest_wp2point.pos}; anchor {anchor_point}; closest {closest_wp2anchor.pos}")
-
-        # 3, generate waypoint path
-        waypoint_paths = []
-        waypoint_paths += self._waypoints_starting_at_waypoint_nums\
-            (point, closest_wp2point, anchor_point, closest_wp2anchor, lookaheadnum)
-
-        return waypoint_paths
+    # def waypoint_paths_along_route_nums(self, point, anchor_point, lookaheadnum, route):
+    #     assert len(route) > 0, f"Expected at least 1 edge in the route, got: {route}"
+    #     # print("nums, in waypoint_paths_along_route")
+    #     # 1, find the closest waypoint to current point of ego vehicle
+    #     #        closest_wp_on_each_route_edge: linked_wp
+    #     #        TODO: consider the heading of anchor point to find the closest waypoint
+    #     closest_wp_on_each_route_edge_2point = [
+    #         self._closest_linked_wp_in_kd_tree_batched(
+    #             [point],
+    #             self._waypoints_by_edge_id[edge],
+    #             self._waypoints_kd_tree_by_edge_id[edge],
+    #         )[0][0]
+    #         for edge in route
+    #     ]
+    #     closest_linked_wp_2point = min(
+    #         closest_wp_on_each_route_edge_2point, key=lambda l_wp: l_wp.wp.dist_to(point)
+    #     )
+    #     closest_wp2point = closest_linked_wp_2point[0]
+    #     # print(f"nums, closest wp {closest_wp2point[0].pos}")
+    #
+    #     # 2, find the closest waypoint to anchor point
+    #     #        closest_wp_on_each_route_edge: linked_wp
+    #     #        TODO: consider the heading of anchor point to find the closest waypoint
+    #     # anchor_point = [18, -1.9, 0.05]  # For test
+    #     # print(f"in 1633, anchor_point {anchor_point}")
+    #     closest_wp_on_each_route_edge_2anchor = [
+    #         self._closest_linked_wp_in_kd_tree_batched(
+    #             [anchor_point],
+    #             self._waypoints_by_edge_id[edge],
+    #             self._waypoints_kd_tree_by_edge_id[edge],
+    #         )[0][0]
+    #         for edge in route
+    #     ]
+    #     closest_linked_wp2anchor = min(
+    #         closest_wp_on_each_route_edge_2anchor, key=lambda l_wp: l_wp.wp.dist_to(anchor_point)
+    #     )
+    #     closest_wp2anchor = closest_linked_wp2anchor[0]
+    #     # print(f"nums, closest wp {closest_wp2anchor[0].pos}")
+    #     print(f"in waypoints.py, point {point}; closest {closest_wp2point.pos}; anchor {anchor_point}; closest {closest_wp2anchor.pos}")
+    #
+    #     # 3, generate waypoint path
+    #     waypoint_paths = []
+    #     waypoint_paths += self._waypoints_starting_at_waypoint_nums\
+    #         (point, closest_wp2point, anchor_point, closest_wp2anchor, lookaheadnum)
+    #
+    #     return waypoint_paths
 
     def _closest_linked_wp_in_kd_tree_with_pose_batched(
         self, poses, waypoints, tree, within_radius, k=10, keep_all_k=False
@@ -385,44 +385,44 @@ class Waypoints:
         # print(f"closest_indices {closest_indices}")
         return [[linked_wps[idx] for idx in idxs] for idxs in closest_indices]
 
-    def _waypoints_starting_at_waypoint_nums(
-        self,
-        point,
-        closest_wp2point: Waypoint,
-        anchor_point,
-        closest_wp2anchor: Waypoint,
-        lookaheadnum,
-    ):
-        # 1. Format the ego_position and anchor_point with corresponding waypoints closest to them.
-        # 2. Generate equally spaced path between them.
-        startPoint = Waypoint(
-            pos=np.array(
-                [
-                    point[0],
-                    point[1],
-                ]
-            ),
-            heading=Heading(point[2]),
-            lane_width=closest_wp2point.lane_width,
-            speed_limit=closest_wp2point.speed_limit,
-            lane_id=closest_wp2point.lane_id,
-            lane_index=closest_wp2point.lane_index,
-        )
-
-        anchorPoint = Waypoint(
-            pos=np.array(
-                [
-                    anchor_point[0],
-                    anchor_point[1],
-                ]
-            ),
-            heading=Heading(anchor_point[2]),
-            lane_width=closest_wp2anchor.lane_width,
-            speed_limit=closest_wp2anchor.speed_limit,
-            lane_id=closest_wp2anchor.lane_id,
-            lane_index=closest_wp2anchor.lane_index,
-        )
-        return self._equally_spaced_path_nums(startPoint, anchorPoint, lookaheadnum)
+    # def _waypoints_starting_at_waypoint_nums(
+    #     self,
+    #     point,
+    #     closest_wp2point: Waypoint,
+    #     anchor_point,
+    #     closest_wp2anchor: Waypoint,
+    #     lookaheadnum,
+    # ):
+    #     # 1. Format the ego_position and anchor_point with corresponding waypoints closest to them.
+    #     # 2. Generate equally spaced path between them.
+    #     startPoint = Waypoint(
+    #         pos=np.array(
+    #             [
+    #                 point[0],
+    #                 point[1],
+    #             ]
+    #         ),
+    #         heading=Heading(point[2]),
+    #         lane_width=closest_wp2point.lane_width,
+    #         speed_limit=closest_wp2point.speed_limit,
+    #         lane_id=closest_wp2point.lane_id,
+    #         lane_index=closest_wp2point.lane_index,
+    #     )
+    #
+    #     anchorPoint = Waypoint(
+    #         pos=np.array(
+    #             [
+    #                 anchor_point[0],
+    #                 anchor_point[1],
+    #             ]
+    #         ),
+    #         heading=Heading(anchor_point[2]),
+    #         lane_width=closest_wp2anchor.lane_width,
+    #         speed_limit=closest_wp2anchor.speed_limit,
+    #         lane_id=closest_wp2anchor.lane_id,
+    #         lane_index=closest_wp2anchor.lane_index,
+    #     )
+    #     return self._equally_spaced_path_nums(startPoint, anchorPoint, lookaheadnum)
 
     def _waypoints_starting_at_waypoint(
         self,
@@ -453,98 +453,98 @@ class Waypoints:
         # print(f"pos is {waypoint_paths[0]}") # record wps between start_s and end_s
         return [self._equally_spaced_path(path, point) for path in waypoint_paths]
 
-    def _equally_spaced_path_nums(self, startPoint, anchorPoint, lookaheadnum,):
-        continuous_variables = [
-            "ref_wp_positions_x",
-            "ref_wp_positions_y",
-            "ref_wp_headings",
-            "ref_wp_lane_width",
-            "ref_wp_speed_limit",
-        ]
-        discrete_variables = ["ref_wp_lane_id", "ref_wp_lane_index"]
-
-        ref_waypoints_coordinates = {
-            parameter: [] for parameter in (continuous_variables + discrete_variables)
-        }
-        path = [startPoint, anchorPoint]
-        for point in path:
-            ref_waypoints_coordinates["ref_wp_positions_x"].append(point.pos[0])
-            ref_waypoints_coordinates["ref_wp_positions_y"].append(point.pos[1])
-            ref_waypoints_coordinates["ref_wp_headings"].append(point.heading.as_bullet)
-            ref_waypoints_coordinates["ref_wp_lane_id"].append(point.lane_id)
-            ref_waypoints_coordinates["ref_wp_lane_index"].append(point.lane_index)
-            ref_waypoints_coordinates["ref_wp_lane_width"].append(point.lane_width)
-            ref_waypoints_coordinates["ref_wp_speed_limit"].append(point.speed_limit)
-
-        ref_waypoints_coordinates["ref_wp_headings"] = np.unwrap(
-            ref_waypoints_coordinates["ref_wp_headings"]
-        )
-        # print(ref_waypoints_coordinates["ref_wp_positions_x"])
-        # To ensure that the distance between waypoints are equal, we used
-        # interpolation approach inspired by:
-        # https://stackoverflow.com/a/51515357
-        cumulative_path_dist = np.cumsum(
-            np.sqrt(
-                np.ediff1d(ref_waypoints_coordinates["ref_wp_positions_x"], to_begin=0)
-                ** 2
-                + np.ediff1d(
-                    ref_waypoints_coordinates["ref_wp_positions_y"], to_begin=0
-                )
-                ** 2
-            )
-        )
-        # print(ref_waypoints_coordinates["ref_wp_positions_x"])
-        # print(f"cumulative_path_dist is {cumulative_path_dist}")
-
-        if len(cumulative_path_dist) <= 1:
-            return [path[0]]
-
-        evenly_spaced_cumulative_path_dist = np.linspace(
-            0, cumulative_path_dist[-1], lookaheadnum
-        )
-
-        evenly_spaced_coordinates = {}
-        for variable in continuous_variables:
-            evenly_spaced_coordinates[variable] = interp1d(
-                cumulative_path_dist, ref_waypoints_coordinates[variable]
-            )(evenly_spaced_cumulative_path_dist)
-
-        for variable in discrete_variables:
-            ref_coordinates = ref_waypoints_coordinates[variable]
-            evenly_spaced_coordinates[variable] = []
-            jdx = 0
-            for idx in range(lookaheadnum):
-                while (
-                    jdx + 1 < len(cumulative_path_dist)
-                    and evenly_spaced_cumulative_path_dist[idx]
-                    > cumulative_path_dist[jdx + 1]
-                ):
-                    jdx += 1
-
-                evenly_spaced_coordinates[variable].append(ref_coordinates[jdx])
-            evenly_spaced_coordinates[variable].append(ref_coordinates[-1])
-
-        equally_spaced_path = []
-        for idx in range(lookaheadnum):
-            equally_spaced_path.append(
-                Waypoint(
-                    pos=np.array(
-                        [
-                            evenly_spaced_coordinates["ref_wp_positions_x"][idx],
-                            evenly_spaced_coordinates["ref_wp_positions_y"][idx],
-                        ]
-                    ),
-                    heading=Heading(evenly_spaced_coordinates["ref_wp_headings"][idx]),
-                    lane_width=evenly_spaced_coordinates["ref_wp_lane_width"][idx],
-                    speed_limit=evenly_spaced_coordinates["ref_wp_speed_limit"][idx],
-                    lane_id=evenly_spaced_coordinates["ref_wp_lane_id"][idx],
-                    lane_index=evenly_spaced_coordinates["ref_wp_lane_index"][idx],
-                )
-            )
-        # print(evenly_spaced_coordinates["ref_wp_positions_x"])
-        # print(evenly_spaced_coordinates["ref_wp_positions_y"])
-        # print(evenly_spaced_coordinates["ref_wp_headings"])
-        return equally_spaced_path
+    # def _equally_spaced_path_nums(self, startPoint, anchorPoint, lookaheadnum,):
+    #     continuous_variables = [
+    #         "ref_wp_positions_x",
+    #         "ref_wp_positions_y",
+    #         "ref_wp_headings",
+    #         "ref_wp_lane_width",
+    #         "ref_wp_speed_limit",
+    #     ]
+    #     discrete_variables = ["ref_wp_lane_id", "ref_wp_lane_index"]
+    #
+    #     ref_waypoints_coordinates = {
+    #         parameter: [] for parameter in (continuous_variables + discrete_variables)
+    #     }
+    #     path = [startPoint, anchorPoint]
+    #     for point in path:
+    #         ref_waypoints_coordinates["ref_wp_positions_x"].append(point.pos[0])
+    #         ref_waypoints_coordinates["ref_wp_positions_y"].append(point.pos[1])
+    #         ref_waypoints_coordinates["ref_wp_headings"].append(point.heading.as_bullet)
+    #         ref_waypoints_coordinates["ref_wp_lane_id"].append(point.lane_id)
+    #         ref_waypoints_coordinates["ref_wp_lane_index"].append(point.lane_index)
+    #         ref_waypoints_coordinates["ref_wp_lane_width"].append(point.lane_width)
+    #         ref_waypoints_coordinates["ref_wp_speed_limit"].append(point.speed_limit)
+    #
+    #     ref_waypoints_coordinates["ref_wp_headings"] = np.unwrap(
+    #         ref_waypoints_coordinates["ref_wp_headings"]
+    #     )
+    #     # print(ref_waypoints_coordinates["ref_wp_positions_x"])
+    #     # To ensure that the distance between waypoints are equal, we used
+    #     # interpolation approach inspired by:
+    #     # https://stackoverflow.com/a/51515357
+    #     cumulative_path_dist = np.cumsum(
+    #         np.sqrt(
+    #             np.ediff1d(ref_waypoints_coordinates["ref_wp_positions_x"], to_begin=0)
+    #             ** 2
+    #             + np.ediff1d(
+    #                 ref_waypoints_coordinates["ref_wp_positions_y"], to_begin=0
+    #             )
+    #             ** 2
+    #         )
+    #     )
+    #     # print(ref_waypoints_coordinates["ref_wp_positions_x"])
+    #     # print(f"cumulative_path_dist is {cumulative_path_dist}")
+    #
+    #     if len(cumulative_path_dist) <= 1:
+    #         return [path[0]]
+    #
+    #     evenly_spaced_cumulative_path_dist = np.linspace(
+    #         0, cumulative_path_dist[-1], lookaheadnum
+    #     )
+    #
+    #     evenly_spaced_coordinates = {}
+    #     for variable in continuous_variables:
+    #         evenly_spaced_coordinates[variable] = interp1d(
+    #             cumulative_path_dist, ref_waypoints_coordinates[variable]
+    #         )(evenly_spaced_cumulative_path_dist)
+    #
+    #     for variable in discrete_variables:
+    #         ref_coordinates = ref_waypoints_coordinates[variable]
+    #         evenly_spaced_coordinates[variable] = []
+    #         jdx = 0
+    #         for idx in range(lookaheadnum):
+    #             while (
+    #                 jdx + 1 < len(cumulative_path_dist)
+    #                 and evenly_spaced_cumulative_path_dist[idx]
+    #                 > cumulative_path_dist[jdx + 1]
+    #             ):
+    #                 jdx += 1
+    #
+    #             evenly_spaced_coordinates[variable].append(ref_coordinates[jdx])
+    #         evenly_spaced_coordinates[variable].append(ref_coordinates[-1])
+    #
+    #     equally_spaced_path = []
+    #     for idx in range(lookaheadnum):
+    #         equally_spaced_path.append(
+    #             Waypoint(
+    #                 pos=np.array(
+    #                     [
+    #                         evenly_spaced_coordinates["ref_wp_positions_x"][idx],
+    #                         evenly_spaced_coordinates["ref_wp_positions_y"][idx],
+    #                     ]
+    #                 ),
+    #                 heading=Heading(evenly_spaced_coordinates["ref_wp_headings"][idx]),
+    #                 lane_width=evenly_spaced_coordinates["ref_wp_lane_width"][idx],
+    #                 speed_limit=evenly_spaced_coordinates["ref_wp_speed_limit"][idx],
+    #                 lane_id=evenly_spaced_coordinates["ref_wp_lane_id"][idx],
+    #                 lane_index=evenly_spaced_coordinates["ref_wp_lane_index"][idx],
+    #             )
+    #         )
+    #     # print(evenly_spaced_coordinates["ref_wp_positions_x"])
+    #     # print(evenly_spaced_coordinates["ref_wp_positions_y"])
+    #     # print(evenly_spaced_coordinates["ref_wp_headings"])
+    #     return equally_spaced_path
 
     def _equally_spaced_path(self, path, point):
         continuous_variables = [

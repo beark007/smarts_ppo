@@ -12,7 +12,7 @@ agent:
       neighbor: 8
       ego_pos: True
   action:
-    type: 8  # 0: continuous, 1: discrete, 3: ContWithSpeed, 8: AnchorPoint
+    type: 8  # 0: continuous, 1: discrete, 3: ContWithSpeed, 8: AnchorPoint, 5: Trajectory
 
 interface:
   max_episode_steps: 10000
@@ -30,7 +30,7 @@ policy:
     name: PPOTrainer
 
 run:
-  checkpoint_freq: 10
+  checkpoint_freq: 5
   checkpoint_at_end: True
   max_failures: 100000
   resume: False
@@ -39,10 +39,10 @@ run:
 #    time_total_s: 1800
 #    time_total_s: 43200
 #    time_total_s: 5000
-    time_total_s: 3600
+#    time_total_s: 36000
 #    time_total_s: 5400
 #    time_total_s: 1800
-#    time_total_s: 10
+    time_total_s: 10
   config:
     observation_filter: "MeanStdFilter"
 #    monitor: True

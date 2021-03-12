@@ -52,8 +52,8 @@ SPACE_LIB = dict(
     neighbor=lambda neighbor_num: gym.spaces.Box(
         low=-1e3, high=1e3, shape=(neighbor_num * 5,),
     ),
-
     ego_pos =lambda _: gym.spaces.Box(low=-1e3, high=1e3, shape=(2,)),
+    target_dist =lambda _: gym.spaces.Box(low=-1e3, high=1e3, shape=(3,)),
     # ego_pos_x=lambda _: gym.spaces.Box(low=0, high=200.0, shape=(1,)),
     # ego_pos_y=lambda _: gym.spaces.Box(low=-4.8, high=4.8, shape=(1,)),
 
@@ -170,6 +170,14 @@ class ActionSpace:
                 high=np.array([1.0, 1.0, 1.0]),
                 dtype=np.float32,
             )
+        elif space_type == ActionSpaceType.Trajectory:
+            # [x,y,heading,speed]
+            # rescale in simple.py (step)
+            return gym.spaces.Box(
+                low=np.array([0.0, -4.8, -3.14, 0.0]),
+                high=np.array([200.0, 4.8, 0.0, 33.3]),
+                dtype=np.float32,
+            )
         else:
             raise NotImplementedError
 
@@ -271,7 +279,7 @@ class CalObs:
             math.sin(math.radians(wp.relative_heading(ego.heading)))
             for wp in closest_path_wps
         ]
-        print(f"in cal heading, anchor {closest_path[-1].pos}, point used4heading {closest_path_wps[-1].pos}")
+        # print(f"in cal heading, anchor {closest_path[-1].pos}, point used4heading {closest_path_wps[-1].pos}")
         return np.asarray(heading_errors)
 
     @staticmethod
@@ -280,15 +288,30 @@ class CalObs:
         ego = env_obs.ego_vehicle_state
         res = np.asarray([ego.speed])
         # print(f"cur speed {res * 3.6 / 120}")
-        return res * 3.6 / 120
+        return res
 
     @staticmethod
     def cal_ego_pos(env_obs: Observation, _):
-        # position in reality
         ego = env_obs.ego_vehicle_state
-        pos = np.asarray(ego.position[:2])
-        # print(f"cur ego pos {pos}")
-        return pos
+        # position
+        ego_2d_pos = ego.position[:2]
+        # vel
+        # ego_vel = ego.speed # res * 3.6 / 120
+        # lane_index
+        # ego_lane = ego.lane_index
+        return np.asarray(ego_2d_pos)
+
+
+    @staticmethod
+    def cal_target_dist(env_obs: Observation, _):
+        # parameters: _ defined in .yaml (features:...)
+        goal = env_obs.ego_vehicle_state.mission.goal
+        ego_2d_pos = env_obs.ego_vehicle_state.position[:2]
+        goal_pos = goal.position
+        goal_dist = distance.euclidean(ego_2d_pos, goal_pos)
+        x_dist = np.abs(ego_2d_pos[0]-goal_pos[0])
+        y_dist = np.abs(ego_2d_pos[1]-goal_pos[1])
+        return np.asarray([goal_dist, x_dist, y_dist])
 
     @staticmethod
     def cal_steering(env_obs: Observation, _):
@@ -924,6 +947,8 @@ class ActionAdapter:
             return ActionAdapter.continuous_discrete_action_adapter
         elif space_type == ActionSpaceType.AnchorPoint:
             return ActionAdapter.continuous_action_anchor_adapter
+        elif space_type == ActionSpaceType.Trajectory:
+            return ActionAdapter.continuous_action_traj_adapter
         else:
             raise NotImplementedError
 
@@ -967,6 +992,12 @@ class ActionAdapter:
     def continuous_action_anchor_adapter(policy_action):
         # print("in fun of continuous_action_anchor_adapter")
         assert len(policy_action) == 3
+        return policy_action
+
+    @staticmethod
+    def continuous_action_traj_adapter(policy_action):
+        # print("in fun of continuous_action_anchor_adapter")
+        assert len(policy_action) == 4
         return policy_action
 
 def subscribe_features(**kwargs):
@@ -1045,7 +1076,7 @@ def get_reward_adapter(observation_adapter, adapter_type="vanilla"):
         return env_reward
 
     def single_frame(last_env_obs, env_obs, env_reward):
-        # print(f"in single_frame, and env_reward is {env_reward}.")
+        print(f"in single_frame, and env_reward is {env_reward}.")
         # print(f"action is {env_obs._agent_to_last_action}")
         reward, bonus = 0.0, 0.0
 
@@ -1114,6 +1145,7 @@ def get_reward_adapter(observation_adapter, adapter_type="vanilla"):
         # print(f"mission goal is {goal.position}")
         last_ego_2d_pos = last_env_obs.ego_vehicle_state.position[:2]
         ego_2d_pos = env_obs.ego_vehicle_state.position[:2]
+        print(f"in reward, ego pos {ego_2d_pos}")
         # if hasattr(goal, "position"):
         goal_pos = goal.position
         last_goal_dist = distance.euclidean(last_ego_2d_pos, goal_pos)

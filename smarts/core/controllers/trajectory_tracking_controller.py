@@ -189,6 +189,10 @@ class TrajectoryTrackingController:
         velocity_damping_gain = params["velocity_damping_gain"]
         windup_gain = params["windup_gain"]
 
+        # Reformat trajectory when length of element in trajectory == 1
+        print(f"in PD, traj {trajectory}")
+        trajectory = [[trajectory[0]], [trajectory[1]], [trajectory[2]], [trajectory[3]]]
+
         curvature_radius = TrajectoryTrackingController.curvature_calculation(
             trajectory
         )
@@ -391,7 +395,6 @@ class TrajectoryTrackingController:
     def curvature_calculation(trajectory, offset=0):
         number_ahead_points = 5
         relative_heading_sum, relative_distant_sum = 0, 0
-
         if len(trajectory[2]) <= number_ahead_points + offset:
             return 1e20
 

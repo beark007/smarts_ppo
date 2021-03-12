@@ -692,8 +692,7 @@ class SMARTS(ShowBase):
             if agent_controls_vehicles(agent_id)
             and matches_provider_action_spaces(agent_id, self._pybullet_action_spaces)
         }
-        # print(actions.items())
-        # print(f"pybullet_actions {pybullet_actions}")
+
         accumulated_provider_state.merge(self._pybullet_provider_step(pybullet_actions))
 
         for provider in self.providers:

@@ -97,78 +97,21 @@ class Simple(Wrapper):
 
     def step(self, agent_actions):
         # print(f"in step, simple class")
-        # rescale action with [100, 4.8]
-        coefficient = [200, 4.8, 33.3]
-        rescale_action = {
-                    key: val * coefficient
-                    for key, val in agent_actions.items()
-                }
-        print(f"in step, simple class, before action {agent_actions}; rescale_action {rescale_action}")
-        observations, rewards, dones, infos = self.env.step(rescale_action)
-        # End the episode if agent_actions not valid.
-        # Target position behind the current position. x < x_{ego}
-        # ego_pos = observations.ego_vehicle_state.position
-        # rescale_action
-        # threshold: decrease with mid_pos
-        # mid_pos = (ego_pos + goal)/2
-        #
-        # ********************************************************************************
-        # -------------------------------------------------------------------------
-        #                 ego_pos                  mid_pos                        goal
-        # -------------------------------------------------------------------------
-        #     ap
-        #       <-    dist     ->
-        # ********************************************************************************
-        # dist = ap - ego_pos
-        # buffer = mid_pos
-        # dist + buffer < 0 ---> reset current episode in advance
-        # TODO:
-        #   Current version supports handling only one agent
-        #   Sets done  to True except for '__all__' in this situation
-        #   Extend the position of goal --> doesn't work
-        action = [
-            action
-            for _, action in rescale_action.items()
-        ]
-        pos = [
-            obs.ego_vehicle_state.position
-            for _, obs in observations.items()
-        ]
-        goal = [
-            obs.ego_vehicle_state.mission.goal.position
-            for _, obs in observations.items()
-        ]
+        # rescale action with [200, 4.8, 1.57]
+        # coefficient = [200, 4.8, 1.57]
+        # rescale_action = {
+        #             key: val * coefficient
+        #             for key, val in agent_actions.items()
+        #         }
 
-        cur_position_xy = pos[0][:2]
-        cur_position_x = cur_position_xy[0]
-        anchor_point_xy = action[0][:2]
-        anchor_point_x = anchor_point_xy[0]
-        goal = list(goal[0])
-
-        mid_pos = (cur_position_xy + goal)/2
-
-        mid_pos_x = mid_pos[0]
-        # assert
-
-        new_dones = dones
-        buffer = mid_pos_x
-        # or mid_pos_x + anchor_point_x > goal_x
-        if anchor_point_x + buffer < cur_position_x:
-            print(f"End episode in advance, ego_position {cur_position_xy}; anchor point {mid_pos + anchor_point_xy}")
-            new_dones = {
-                    # key: True
-                    key: True if val != '__all__' else False
-                    for key, val in dones.items()
-                }
-            print(new_dones)
+        # print(f"in step, simple class, before action {agent_actions}; rescale_action {rescale_action}")
+        observations, rewards, dones, infos = self.env.step(agent_actions)
 
         infos = self._get_infos(observations, rewards, infos)
-        print("start call reward in common")
         rewards = self._get_rewards(self._last_observations, observations, rewards)
         self._update_last_observation(observations)  # it is environment observation
         observations = self._get_observations(observations)
-        # return observations, rewards, dones, infos
-        return observations, rewards, new_dones, infos
+        return observations, rewards, dones, infos
 
     def reset(self):
         print(f"in reset, simple class")
